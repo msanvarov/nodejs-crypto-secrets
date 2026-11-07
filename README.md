@@ -1,6 +1,6 @@
 # nodejs-crypto-secrets
 
-[![CI](https://github.com/msanvarov/nodejs-crypto-secrets/actions/workflows/test.yml/badge.svg)](https://github.com/msanvarov/nodejs-crypto-secrets/actions/workflows/test.yml) ![Node](https://img.shields.io/badge/node-%3E%3D22.13-339933?logo=node.js&logoColor=white) ![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
+[![CI](https://github.com/msanvarov/nodejs-crypto-secrets/actions/workflows/test.yml/badge.svg)](https://github.com/msanvarov/nodejs-crypto-secrets/actions/workflows/test.yml) ![Node](https://img.shields.io/badge/node-%3E%3D22.13-339933?logo=node.js&logoColor=white) ![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen) ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
 
 Getting crypto right in Node.js with nothing but `node:crypto`. Each file in `src/` shows the common mistake next to the fix, and `test/` proves the difference (for example, a forged `alg: none` JWT that the unsafe verifier accepts).
 
@@ -89,3 +89,7 @@ npm test
 ```
 
 Found a mistake or want to add an example? Issues and pull requests are welcome.
+
+## License
+
+[MIT](LICENSE)
