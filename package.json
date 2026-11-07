@@ -1,0 +1,13 @@
+{
+  "name": "nodejs-crypto-secrets",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Password hashing, secure tokens, JWT verification, encryption, and secret handling with node:crypto",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}
