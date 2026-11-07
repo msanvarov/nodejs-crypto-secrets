@@ -1,9 +1,27 @@
 # nodejs-crypto-secrets
 
+[![CI](https://github.com/msanvarov/nodejs-crypto-secrets/actions/workflows/test.yml/badge.svg)](https://github.com/msanvarov/nodejs-crypto-secrets/actions/workflows/test.yml) ![Node](https://img.shields.io/badge/node-%3E%3D22.13-339933?logo=node.js&logoColor=white) ![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
+
 Getting crypto right in Node.js with nothing but `node:crypto`. Each file in `src/` shows the common mistake next to the fix, and `test/` proves the difference (for example, a forged `alg: none` JWT that the unsafe verifier accepts).
 
 ```bash
 npm test
+```
+
+> [!WARNING]
+> Functions ending in `Unsafe` are **intentionally vulnerable** so the tests can show the attack working. Copy the safe versions, never those.
+
+## Project layout
+
+```text
+src/
+  password.js   sha256 vs salted scrypt
+  tokens.js     Math.random vs crypto.randomBytes
+  jwt.js        alg-trusting verifier vs pinned HS256
+  encrypt.js    AES-CBC with static IV vs AES-256-GCM
+  config.js     fail-fast secret loading and log redaction
+test/
+  crypto.test.js   proves each mistake and each fix
 ```
 
 ## What's covered
@@ -50,3 +68,24 @@ npm test
 - In production, inject env vars from a secret manager (AWS Secrets Manager, GCP Secret Manager, Vault, Doppler, your platform's encrypted variables).
 - Scan for committed secrets with GitHub secret scanning or `gitleaks`. If a secret was ever committed, rotate it. Removing it from history is not enough.
 - Never log request headers, bodies, or `process.env` without redaction.
+
+## Node.js security series
+
+| Repo | Covers |
+| --- | --- |
+| [nodejs-injection-defense](https://github.com/msanvarov/nodejs-injection-defense) | Command, SQL, path traversal, prototype pollution, ReDoS |
+| [nodejs-http-hardening](https://github.com/msanvarov/nodejs-http-hardening) | Headers, body limits, timeouts, rate limiting, CORS, safe errors |
+| [nodejs-supply-chain-security](https://github.com/msanvarov/nodejs-supply-chain-security) | npm config, CI auditing, install-script scanning, permission model |
+| **nodejs-crypto-secrets** (you are here) | Password hashing, tokens, JWTs, encryption, secrets |
+
+## Running it
+
+Requires Node.js 22.13 or newer. No `npm install` needed.
+
+```bash
+git clone https://github.com/msanvarov/nodejs-crypto-secrets.git
+cd nodejs-crypto-secrets
+npm test
+```
+
+Found a mistake or want to add an example? Issues and pull requests are welcome.
