@@ -5,7 +5,7 @@ import { randomBytes } from 'node:crypto';
 import { hashPassword, hashPasswordUnsafe, verifyPassword } from '../src/password.js';
 import { hashToken, otpCode, resetToken } from '../src/tokens.js';
 import { sign, verify, verifyUnsafe } from '../src/jwt.js';
-import { decrypt, encrypt, encryptUnsafe } from '../src/encrypt.js';
+import { decrypt, decryptUnsafe, encrypt, encryptUnsafe } from '../src/encrypt.js';
 import { redact, requireSecret } from '../src/config.js';
 
 test('passwords: salted scrypt, unique per hash, verifies correctly', async () => {
@@ -64,6 +64,16 @@ test('encryption: GCM round-trips, uses fresh IVs, and detects tampering', () =>
   bytes[bytes.length - 1] ^= 1; // flip one bit of ciphertext
   assert.throws(() => decrypt(bytes.toString('base64'), key));
   assert.throws(() => decrypt(c1, randomBytes(32)));
+});
+
+test('encryption: CBC without a MAC accepts an attacker-edited ciphertext', () => {
+  const key = randomBytes(32);
+  const plain = 'Transfer $100 to account 4242'; // "account 4242" sits in the second 16-byte block
+  const bytes = Buffer.from(encryptUnsafe(plain, key), 'base64');
+  // Flipping ciphertext block 0 flips the same bits of plaintext block 1.
+  for (let i = 25; i < 29; i++) bytes[i - 16] ^= plain.charCodeAt(i) ^ '9'.charCodeAt(0);
+  const tampered = decryptUnsafe(bytes.toString('base64'), key);
+  assert.ok(tampered.endsWith('account 9999'), 'no error, and the account number changed');
 });
 
 test('config: missing or weak secrets fail fast; logs are redacted', () => {

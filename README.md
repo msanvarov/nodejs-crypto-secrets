@@ -1,6 +1,6 @@
 # nodejs-crypto-secrets
 
-[![CI](https://github.com/msanvarov/nodejs-crypto-secrets/actions/workflows/test.yml/badge.svg)](https://github.com/msanvarov/nodejs-crypto-secrets/actions/workflows/test.yml) ![Node](https://img.shields.io/badge/node-%3E%3D22.13-339933?logo=node.js&logoColor=white) ![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen) ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+[![CI](https://github.com/msanvarov/nodejs-crypto-secrets/actions/workflows/test.yml/badge.svg)](https://github.com/msanvarov/nodejs-crypto-secrets/actions/workflows/test.yml) ![Node](https://img.shields.io/badge/node-%3E%3D22.13-339933?logo=node.js&logoColor=white) ![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen) ![License: MIT](https://img.shields.io/badge/license-MIT-blue) [![Live demo](https://img.shields.io/badge/live%20demo-netlify-00C7B7?logo=netlify&logoColor=white)](https://nodejs-crypto-secrets.netlify.app)
 
 Getting crypto right in Node.js with nothing but `node:crypto`. Each file in `src/` shows the common mistake next to the fix, and `test/` proves the difference (for example, a forged `alg: none` JWT that the unsafe verifier accepts).
 
@@ -10,6 +10,45 @@ npm test
 
 > [!WARNING]
 > Functions ending in `Unsafe` are **intentionally vulnerable** so the tests can show the attack working. Copy the safe versions, never those.
+
+## Interactive demo
+
+**Live preview: [nodejs-crypto-secrets.netlify.app](https://nodejs-crypto-secrets.netlify.app)**. It replays recorded runs, so nothing executes on that server. Run it locally to try your own payloads.
+
+A local web page that runs the real unsafe and safe functions from `src/` side by side, so you can try each attack yourself.
+
+```bash
+npm run demo     # then open http://127.0.0.1:4104
+```
+
+It only listens on `127.0.0.1` and rejects requests from other websites.
+
+The hosted preview is a static build of `demo/recordings.json` (`npm run build`). Refresh the recordings with `npm run demo:record` (needs Google Chrome).
+
+### Password storage
+The same unsalted SHA-256 hash every time, cracked instantly from a list of common passwords, next to salted scrypt hashes that never repeat.
+
+![Unsafe sha256 hash of password123 cracked in 0.01 ms from a leaked-password list; safe scrypt hashes differ each time and no lookup matches](docs/passwords.png)
+
+### Random tokens
+Reset tokens from `Math.random()` next to tokens from `crypto.randomBytes`, plus the hash you would store instead of the token.
+
+![Five short Math.random tokens marked predictable next to five 43-character randomBytes tokens and the sha256 stored in the database](docs/tokens.png)
+
+### JWT verification
+Edit the header, payload, and signature, then see which verifier accepts it. Presets include an `alg: none` forgery, a tampered payload, an expired token, and a genuine one.
+
+![An alg none token with role admin accepted by the unsafe verifier and rejected by the safe one with "unexpected algorithm"](docs/jwt.png)
+
+### Encryption
+AES-CBC with a fixed IV gives identical ciphertexts and lets an attacker rewrite part of the message. AES-GCM refuses to decrypt after a single flipped bit.
+
+![CBC ciphertext edited so "account 4242" decrypts as "account 9999" with no error; GCM decryption of a tampered message fails](docs/encryption.png)
+
+### Secrets & config
+Start the app with a weak or missing `JWT_SECRET`. The unsafe pattern falls back to a default and logs it; the safe one refuses to start and redacts its logs.
+
+![Unsafe app starts with "changeme" and logs the secret in plain text; safe app refuses to start and logs redacted values](docs/secrets.png)
 
 ## Project layout
 
@@ -22,6 +61,11 @@ src/
   config.js     fail-fast secret loading and log redaction
 test/
   crypto.test.js   proves each mistake and each fix
+  demo.test.js     checks the demo server and its local-only guards
+demo/
+  server.js     local demo server (127.0.0.1 only), calls the real src/ functions
+  index.html    the demo page
+docs/           screenshots used in this README
 ```
 
 ## What's covered

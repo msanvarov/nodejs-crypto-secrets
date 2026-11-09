@@ -28,3 +28,10 @@ export function decrypt(blob, key) {
   decipher.setAuthTag(buf.subarray(IV_LEN, IV_LEN + TAG_LEN));
   return Buffer.concat([decipher.update(buf.subarray(IV_LEN + TAG_LEN)), decipher.final()]).toString('utf8');
 }
+
+// UNSAFE: no integrity check. A tampered ciphertext decrypts "successfully" to
+// whatever the attacker's bit flips produced.
+export function decryptUnsafe(blob, key) {
+  const decipher = createDecipheriv('aes-256-cbc', key, STATIC_IV);
+  return Buffer.concat([decipher.update(Buffer.from(blob, 'base64')), decipher.final()]).toString('utf8');
+}

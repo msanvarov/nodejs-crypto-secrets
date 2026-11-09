@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crypto Secrets Demo</title>
+<style>
+  :root {
+    --bg: #f7f7f8; --panel: #ffffff; --text: #16181d; --muted: #5c6370; --border: #e3e5e8; --code: #f1f2f4;
+    --bad: #d93036; --bad-bg: #fdecec; --good: #1f8a50; --good-bg: #e8f6ee; --accent: #3b6fe0;
+    --warn: #8a5a00; --warn-bg: #fff4d6;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d0f12; --panel: #16191e; --text: #e8eaed; --muted: #9aa1ad; --border: #2a2f37; --code: #0f1216;
+      --bad: #ff6369; --bad-bg: #3a1517; --good: #4cc38a; --good-bg: #10291d; --accent: #6e9bff;
+      --warn: #f5c451; --warn-bg: #33270a;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d0f12; --panel: #16191e; --text: #e8eaed; --muted: #9aa1ad; --border: #2a2f37; --code: #0f1216;
+    --bad: #ff6369; --bad-bg: #3a1517; --good: #4cc38a; --good-bg: #10291d; --accent: #6e9bff;
+    --warn: #f5c451; --warn-bg: #33270a;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  code, pre, input, textarea { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+  header h1 { margin: 0 0 4px; font-size: 24px; letter-spacing: -0.01em; }
+  header p { margin: 0 0 10px; color: var(--muted); }
+  header a { color: var(--accent); }
+  .notice {
+    display: inline-block; font-size: 13px; padding: 4px 10px; border-radius: 999px;
+    background: var(--warn-bg); color: var(--warn); border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent);
+  }
+  nav.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+  nav.tabs a {
+    text-decoration: none; color: var(--text); background: var(--panel); border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 8px; font-size: 14px;
+  }
+  nav.tabs a:hover { border-color: var(--accent); }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; margin-bottom: 20px; scroll-margin-top: 16px;
+  }
+  .card h2 { margin: 0 0 4px; font-size: 19px; }
+  .lede { margin: 0 0 14px; color: var(--muted); max-width: 75ch; }
+  label { display: block; font-size: 13px; font-weight: 600; margin: 0 0 4px; }
+  .row { display: flex; gap: 8px; }
+  input[type=text], textarea {
+    flex: 1; min-width: 0; width: 100%; padding: 8px 10px; font-size: 14px; color: var(--text);
+    background: var(--code); border: 1px solid var(--border); border-radius: 8px;
+  }
+  textarea { resize: vertical; min-height: 40px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+  .grid3 .full { grid-column: 1 / -1; }
+  button {
+    font: inherit; font-size: 14px; cursor: pointer; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--panel); color: var(--text); padding: 7px 12px;
+  }
+  button.run { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; padding: 7px 18px; }
+  button:disabled { opacity: .6; cursor: progress; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; align-items: center; }
+  .chips span { font-size: 13px; color: var(--muted); margin-right: 2px; }
+  .chip { font-size: 13px; padding: 3px 10px; border-radius: 999px; }
+  .chip:hover { border-color: var(--accent); }
+  .results { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .pane { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; min-width: 0; }
+  .pane.unsafe { border-top: 3px solid var(--bad); }
+  .pane.safe { border-top: 3px solid var(--good); }
+  .pane h3 { margin: 0 0 8px; font-size: 15px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .pane.unsafe h3 .name { color: var(--bad); }
+  .pane.safe h3 .name { color: var(--good); }
+  .pane .ran { font-size: 12.5px; color: var(--muted); margin: -4px 0 8px; }
+  .badge { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .badge.bad { background: var(--bad-bg); color: var(--bad); }
+  .badge.good { background: var(--good-bg); color: var(--good); }
+  .pane .empty { color: var(--muted); font-size: 14px; }
+  .k { font-size: 12.5px; color: var(--muted); margin: 8px 0 3px; }
+  .k:first-child { margin-top: 0; }
+  pre {
+    margin: 0; padding: 8px 10px; background: var(--code); border-radius: 6px; font-size: 12.5px;
+    white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .say { margin: 8px 0 0; font-size: 14px; }
+  .say.bad { color: var(--bad); }
+  .say.good { color: var(--good); }
+  .fix { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+  .fix strong { color: var(--text); }
+  .tok .h { color: #e5484d; } .tok .p { color: #b46cf0; } .tok .s { color: #2ea8c4; }
+  :root[data-theme="dark"] .tok .h { color: #ff8589; }
+  @media (max-width: 720px) {
+    .results, .grid3 { grid-template-columns: 1fr; }
+    .card { padding: 16px; }
+  }
+  body.only nav.tabs, body.only header p, body.only header .notice { display: none; }
+  body.only .wrap { padding-top: 16px; padding-bottom: 8px; }
+  body.only header h1 { margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>nodejs-crypto-secrets</h1>
+    <p>Common crypto mistakes in Node.js, run live next to their fixes. <a href="https://github.com/msanvarov/nodejs-crypto-secrets">View on GitHub</a></p>
+    <span class="notice">Runs deliberately vulnerable code locally · bound to 127.0.0.1</span>
+  </header>
+
+  <nav class="tabs" aria-label="Demos">
+    <a href="#passwords">Passwords</a>
+    <a href="#tokens">Random tokens</a>
+    <a href="#jwt">JWT verification</a>
+    <a href="#encryption">Encryption</a>
+    <a href="#secrets">Secrets &amp; config</a>
+  </nav>
+
+  <main>
+    <section class="card" id="passwords">
+      <h2>Password storage</h2>
+      <p class="lede">An unsalted SHA-256 hash is the same for everyone who picks the same password, so attackers look it up in a precomputed list. Salted scrypt is different every time and slow to guess.</p>
+      <form>
+        <label for="pw">Password</label>
+        <div class="row"><input type="text" id="pw" name="password" value="password123" autocomplete="off"><button class="run">Run</button></div>
+        <div class="chips"><span>Try:</span>
+          <button type="button" class="chip" data-fill='{"password":"password123"}'>password123</button>
+          <button type="button" class="chip" data-fill='{"password":"letmein"}'>letmein</button>
+          <button type="button" class="chip" data-fill='{"password":"hunter2"}'>hunter2</button>
+          <button type="button" class="chip" data-fill='{"password":"correct horse battery staple"}'>correct horse battery staple</button>
+        </div>
+      </form>
+      <div class="results" aria-live="polite"></div>
+      <p class="fix"><strong>Fix:</strong> <code>crypto.scrypt</code> (or Argon2id) with a random salt per user, compared with <code>timingSafeEqual</code>.</p>
+    </section>
+
+    <section class="card" id="tokens">
+      <h2>Random tokens</h2>
+      <p class="lede"><code>Math.random()</code> is built for speed, not secrecy. Its internal state can be recovered from a few outputs, after which every "random" reset link is predictable.</p>
+      <form>
+        <div class="row"><button class="run">Generate 5 reset tokens</button></div>
+      </form>
+      <div class="results" aria-live="polite"></div>
+      <p class="fix"><strong>Fix:</strong> <code>crypto.randomBytes(32)</code> (or <code>randomUUID</code>, <code>randomInt</code>), and store only a hash of the token.</p>
+    </section>
+
+    <section class="card" id="jwt">
+      <h2>JWT verification</h2>
+      <p class="lede">Edit a token and send it to two verifiers. The unsafe one lets the token pick its own algorithm (<code>"none"</code> means no signature check) and ignores expiry.</p>
+      <form>
+        <div class="grid3">
+          <div><label for="jwt-h">Header (JSON)</label><textarea id="jwt-h" name="header" rows="2">{"alg":"none","typ":"JWT"}</textarea></div>
+          <div><label for="jwt-p">Payload (JSON)</label><textarea id="jwt-p" name="payload" rows="2">{"sub":"attacker","role":"admin","exp":9999999999}</textarea></div>
+          <div class="full"><label for="jwt-s">Signature (base64url, empty for none)</label><div class="row"><input type="text" id="jwt-s" name="signature" value="" autocomplete="off"><button class="run">Verify</button></div></div>
+        </div>
+        <div class="chips"><span>Try:</span>
+          <button type="button" class="chip" data-fill='{"header":"{\"alg\":\"none\",\"typ\":\"JWT\"}","payload":"{\"sub\":\"attacker\",\"role\":\"admin\",\"exp\":9999999999}","signature":""}'>alg none forgery</button>
+          <button type="button" class="chip" data-sample="tampered">tampered payload</button>
+          <button type="button" class="chip" data-sample="expired">expired token</button>
+          <button type="button" class="chip" data-sample="valid">valid token</button>
+        </div>
+      </form>
+      <div class="results" aria-live="polite"></div>
+      <p class="fix"><strong>Fix:</strong> pin the algorithm on the server, compare signatures in constant time, and enforce <code>exp</code>.</p>
+    </section>
+
+    <section class="card" id="encryption">
+      <h2>Encryption</h2>
+      <p class="lede">AES-CBC with a fixed IV encrypts the same message to the same bytes, and has no integrity check: editing the ciphertext silently edits the decrypted message.</p>
+      <form>
+        <label for="enc">Plaintext</label>
+        <div class="row"><input type="text" id="enc" name="plaintext" value="Transfer $100 to account 4242" autocomplete="off"><button class="run">Run</button></div>
+        <div class="chips"><span>Try:</span>
+          <button type="button" class="chip" data-fill='{"plaintext":"Transfer $100 to account 4242"}'>Transfer $100 to account 4242</button>
+          <button type="button" class="chip" data-fill='{"plaintext":"Set role for user 1001 to viewer"}'>Set role for user 1001 to viewer</button>
+          <button type="button" class="chip" data-fill='{"plaintext":"yes"}'>yes</button>
+        </div>
+      </form>
+      <div class="results" aria-live="polite"></div>
+      <p class="fix"><strong>Fix:</strong> AES-256-GCM with a fresh random IV per message. The auth tag makes any edit fail to decrypt.</p>
+    </section>
+
+    <section class="card" id="secrets">
+      <h2>Secrets &amp; config</h2>
+      <p class="lede">The value of <code>JWT_SECRET</code> the app starts with. The unsafe pattern falls back to a default and logs its config; the safe one refuses weak secrets and redacts logs.</p>
+      <form>
+        <label for="sec">JWT_SECRET</label>
+        <div class="row"><input type="text" id="sec" name="value" value="changeme" autocomplete="off"><button class="run">Start app</button></div>
+        <div class="chips"><span>Try:</span>
+          <button type="button" class="chip" data-fill='{"value":"changeme"}'>changeme</button>
+          <button type="button" class="chip" data-fill='{"value":"hunter2"}'>hunter2</button>
+          <button type="button" class="chip" data-random>32 random bytes</button>
+          <button type="button" class="chip" data-fill='{"value":""}'>(not set)</button>
+        </div>
+      </form>
+      <div class="results" aria-live="polite"></div>
+      <p class="fix"><strong>Fix:</strong> load secrets from the environment, fail at startup if missing or short, and redact before logging.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const pre = (s) => `<pre>${esc(s)}</pre>`;
+const k = (label) => `<div class="k">${esc(label)}</div>`;
+const say = (cls, text) => (text ? `<p class="say ${cls}">${esc(text)}</p>` : '');
+
+async function api(name, body) {
+  const res = await fetch('/api/' + name, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || res.statusText);
+  return data;
+}
+
+// Each renderer returns { unsafe, safe } HTML, plus optional badge labels.
+const renderers = {
+  passwords(d) {
+    const u = d.unsafe, s = d.safe;
+    return {
+      unsafe: k('sha256(password), twice') + pre(u.hashes.join('\n')) +
+        say('bad', u.identical ? 'Identical every time, for every user with this password.' : '') +
+        k(`Lookup in a list of ${u.tableSize} leaked passwords`) +
+        (u.cracked ? say('bad', `Cracked in ${u.lookupMs} ms: ${u.cracked}`) : say('good', `Not in this small list, but GPUs try billions of guesses per second against SHA-256.`)),
+      safe: k('hashPassword(password), twice') + pre(s.hashes.join('\n')) +
+        say('good', `Different each time (random salt). ${s.hashMs.join(' ms, ')} ms per hash.`) +
+        k('Same lookup') + say('good', 'No match. A precomputed list is useless; every guess costs a full scrypt run per user.') +
+        k('verifyPassword(password, hash)') + pre(String(s.verified)),
+    };
+  },
+  tokens(d) {
+    const u = d.unsafe, s = d.safe;
+    const bits = (t) => Math.round(t.length * Math.log2(36));
+    return {
+      unsafe: k('Math.random().toString(36).slice(2)') + pre(u.tokens.join('\n')) +
+        say('bad', `${u.tokens[0].length} chars, about ${bits(u.tokens[0])} bits on paper. Predictable: V8's generator state can be recovered from a few outputs.`),
+      safe: k("randomBytes(32).toString('base64url')") + pre(s.tokens.join('\n')) +
+        say('good', `${s.tokens[0].length} chars, 256 bits from the OS random generator.`) +
+        k('What goes in the database: sha256(token)') + pre(s.stored),
+      unsafeBadge: 'Predictable', safeBadge: 'Unpredictable',
+    };
+  },
+  jwt(d) {
+    const [h, p, sig] = d.token.split('.');
+    const tok = `<pre class="tok"><span class="h">${esc(h)}</span>.<span class="p">${esc(p)}</span>.<span class="s">${esc(sig)}</span></pre>`;
+    const side = (r) => r.accepted
+      ? k('Accepted. Claims:') + pre(JSON.stringify(r.claims, null, 2))
+      : k('Rejected') + pre(r.error);
+    const verdict = (r) => r.accepted && r.exploited ? say('bad', 'Accepted a token the server never issued (or that has expired).')
+      : r.accepted ? say('good', 'Accepted a genuine token.') : '';
+    return {
+      unsafe: k('Token sent') + tok + side(d.unsafe) + verdict(d.unsafe),
+      safe: k('Token sent') + tok + side(d.safe) + verdict(d.safe),
+    };
+  },
+  encryption(d) {
+    const u = d.unsafe, s = d.safe;
+    return {
+      unsafe: k('encryptUnsafe(text), twice (AES-256-CBC, fixed IV)') + pre(u.ciphertexts.join('\n')) +
+        say('bad', u.identical ? 'Identical: anyone can tell when two messages are the same.' : '') +
+        k(u.targeted ? 'Attacker edits ciphertext block 1, turning digits in block 2 into 9s' : 'Attacker flips one bit of the ciphertext') +
+        (u.tamper.accepted ? say('bad', 'Decrypted without any error to:') + pre(u.tamper.text) +
+          (u.targeted ? say('bad', 'First block is garbage, but the part the attacker targeted changed exactly as planned.') : '')
+          : pre(u.tamper.error)),
+      safe: k('encrypt(text), twice (AES-256-GCM, random IV)') + pre(s.ciphertexts.join('\n')) +
+        say('good', 'Different every time.') +
+        k('Attacker flips one bit of the ciphertext') +
+        (s.tamper.accepted ? say('bad', 'Decrypted without error to:') + pre(s.tamper.text) : say('good', 'Decryption refused:') + pre(s.tamper.error)),
+    };
+  },
+  secrets(d) {
+    const u = d.unsafe, s = d.safe;
+    return {
+      unsafe: k("process.env.JWT_SECRET || 'changeme'") +
+        say('bad', `App started with secret "${u.usedSecret}"${u.weak ? ' (weak, guessable).' : '.'}`) +
+        k('Startup log') + pre(u.log) + say('bad', 'Secrets are now in your log files.'),
+      safe: k("requireSecret('JWT_SECRET')") +
+        (s.started ? say('good', `Loaded ${s.bytes} random bytes.`) : say('good', 'Refused to start:') + pre(s.error)) +
+        k('Startup log, after redact()') + pre(s.log),
+    };
+  },
+};
+
+function badge(exploited, label, isSafe) {
+  const text = label || (exploited ? 'Exploited' : isSafe ? 'Blocked' : 'Not affected');
+  return `<span class="badge ${exploited ? 'bad' : 'good'}">${esc(text)}</span>`;
+}
+
+const paneHtml = (kind, title, html, badgeHtml = '') =>
+  `<div class="pane ${kind}"><h3><span class="name">${title}</span>${badgeHtml}</h3>${html}</div>`;
+
+async function run(section) {
+  const form = section.querySelector('form');
+  const results = section.querySelector('.results');
+  const btn = form.querySelector('button.run');
+  const body = Object.fromEntries(new FormData(form));
+  btn.disabled = true;
+  try {
+    const data = await api(section.id, body);
+    const r = renderers[section.id](data);
+    results.innerHTML = paneHtml('unsafe', 'Unsafe', r.unsafe, badge(data.unsafe.exploited, r.unsafeBadge, false)) +
+      paneHtml('safe', 'Safe', r.safe, badge(data.safe.exploited, r.safeBadge, true));
+  } catch (err) {
+    results.innerHTML = `<div class="pane unsafe"><p class="empty">Request failed: ${esc(err.message)}</p></div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function fill(form, values) {
+  for (const [name, value] of Object.entries(values)) form.elements[name].value = value;
+}
+
+for (const section of document.querySelectorAll('section.card')) {
+  const form = section.querySelector('form');
+  form.addEventListener('submit', (e) => { e.preventDefault(); run(section); });
+  section.querySelector('.results').innerHTML =
+    paneHtml('unsafe', 'Unsafe', '<p class="empty">Press Run to see the attack.</p>') +
+    paneHtml('safe', 'Safe', '<p class="empty">Press Run to compare.</p>');
+  form.addEventListener('click', async (e) => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    if (chip.dataset.fill) fill(form, JSON.parse(chip.dataset.fill));
+    else if (chip.dataset.sample) fill(form, await api('jwt-sample', { kind: chip.dataset.sample }));
+    else if ('random' in chip.dataset) {
+      const bytes = crypto.getRandomValues(new Uint8Array(32));
+      fill(form, { value: btoa(String.fromCharCode(...bytes)) });
+    }
+    run(section);
+  });
+}
+
+const params = new URLSearchParams(location.search);
+if (['dark', 'light'].includes(params.get('theme'))) document.documentElement.dataset.theme = params.get('theme');
+const only = params.get('only');
+if (only && document.getElementById(only)) {
+  document.body.classList.add('only');
+  for (const s of document.querySelectorAll('section.card')) if (s.id !== only) s.hidden = true;
+}
+if (params.get('autorun') === '1') {
+  for (const s of document.querySelectorAll('section.card:not([hidden])')) run(s);
+}
+</script>
+</body>
+</html>

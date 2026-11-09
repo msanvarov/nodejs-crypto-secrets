@@ -1,0 +1,365 @@
+{
+  "encryption\n{\"plaintext\":\"Set role for user 1001 to viewer\"}": {
+    "unsafe": {
+      "ciphertexts": [
+        "cTy8ErFvx6VbnxdiXboBYguIRQ1DaF/Nc5IpCcJSn1bT2F/xUXoAPGLlDdYjTDQ4",
+        "cTy8ErFvx6VbnxdiXboBYguIRQ1DaF/Nc5IpCcJSn1bT2F/xUXoAPGLlDdYjTDQ4"
+      ],
+      "identical": true,
+      "targeted": true,
+      "tamper": {
+        "accepted": true,
+        "text": "\u0002S�O̾\u0007�\u000b��q����r 9999 to viewer"
+      },
+      "exploited": true
+    },
+    "safe": {
+      "ciphertexts": [
+        "Vz9LlCR8V1kpTv89V6v4mlmCGhLAASUbcSsq0LYaBIPUaHyikhe5fXA0bNKyyF0sfB+Me3R15BiqVLBI",
+        "XboY0RULDMNFKgWBYcvL9AqmgIrsnJxHV7M8xbga2RQDmOqB5E5PMVa1xu20/XuatD1qx+i+X0gvBWpO"
+      ],
+      "identical": false,
+      "tamper": {
+        "accepted": false,
+        "error": "Unsupported state or unable to authenticate data"
+      },
+      "exploited": false
+    }
+  },
+  "encryption\n{\"plaintext\":\"Transfer $100 to account 4242\"}": {
+    "unsafe": {
+      "ciphertexts": [
+        "QPt06HTamAvP864E1r3HkojV/76yZTvd4t/5cHxD5ds=",
+        "QPt06HTamAvP864E1r3HkojV/76yZTvd4t/5cHxD5ds="
+      ],
+      "identical": true,
+      "targeted": true,
+      "tamper": {
+        "accepted": true,
+        "text": "���8�p�L��A\u0004��[� account 9999"
+      },
+      "exploited": true
+    },
+    "safe": {
+      "ciphertexts": [
+        "+bf/+sG8nOFV0OYzk+USEoTCgbLFZdZEjXXN6bXxRVEZg4lGT3f3yfFBJmC4t3JsKIzAUG3gQSn8",
+        "rYIFaJ5vpKN2da1e8vxViSFUXLrpo1eicxrAwUKfzeA5aHpSxv62rEJmgx6kIQQvBTmyoe0OcbEr"
+      ],
+      "identical": false,
+      "tamper": {
+        "accepted": false,
+        "error": "Unsupported state or unable to authenticate data"
+      },
+      "exploited": false
+    }
+  },
+  "encryption\n{\"plaintext\":\"yes\"}": {
+    "unsafe": {
+      "ciphertexts": [
+        "ajscAPvnPsVbl2GBnqq+tA==",
+        "ajscAPvnPsVbl2GBnqq+tA=="
+      ],
+      "identical": true,
+      "targeted": false,
+      "tamper": {
+        "accepted": false,
+        "error": "error:1C800064:Provider routines::bad decrypt"
+      },
+      "exploited": true
+    },
+    "safe": {
+      "ciphertexts": [
+        "1snQ5qkZ9hK5lHSSfqMCzlkv8tUHCzgiJkm0N57qXQ==",
+        "lDpXXjETSCfJ3DzMizB+oAlA4qgQGyI7BzpELHdI2A=="
+      ],
+      "identical": false,
+      "tamper": {
+        "accepted": false,
+        "error": "Unsupported state or unable to authenticate data"
+      },
+      "exploited": false
+    }
+  },
+  "jwt\n{\"header\":\"{\\\"alg\\\":\\\"HS256\\\",\\\"typ\\\":\\\"JWT\\\"}\",\"payload\":\"{\\\"sub\\\":\\\"alice\\\",\\\"role\\\":\\\"admin\\\",\\\"exp\\\":1794197046}\",\"signature\":\"BEKojWuiyzsWX5EYpEkQM94sc6Pw2s-_w3Q63wmoyZQ\"}": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbGljZSIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5NDE5NzA0Nn0.BEKojWuiyzsWX5EYpEkQM94sc6Pw2s-_w3Q63wmoyZQ",
+    "legit": false,
+    "unsafe": {
+      "accepted": false,
+      "error": "bad signature",
+      "exploited": false
+    },
+    "safe": {
+      "accepted": false,
+      "error": "bad signature",
+      "exploited": false
+    }
+  },
+  "jwt\n{\"header\":\"{\\\"alg\\\":\\\"HS256\\\",\\\"typ\\\":\\\"JWT\\\"}\",\"payload\":\"{\\\"sub\\\":\\\"alice\\\",\\\"role\\\":\\\"user\\\",\\\"exp\\\":1794196086}\",\"signature\":\"JtwG36YJWIq7SFr2Mvg36XNie-3GcgOUAO54Q3JzJRs\"}": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbGljZSIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzk0MTk2MDg2fQ.JtwG36YJWIq7SFr2Mvg36XNie-3GcgOUAO54Q3JzJRs",
+    "legit": false,
+    "unsafe": {
+      "accepted": true,
+      "claims": {
+        "sub": "alice",
+        "role": "user",
+        "exp": 1794196086
+      },
+      "exploited": true
+    },
+    "safe": {
+      "accepted": false,
+      "error": "token expired",
+      "exploited": false
+    }
+  },
+  "jwt\n{\"header\":\"{\\\"alg\\\":\\\"HS256\\\",\\\"typ\\\":\\\"JWT\\\"}\",\"payload\":\"{\\\"sub\\\":\\\"alice\\\",\\\"role\\\":\\\"user\\\",\\\"exp\\\":1794197047}\",\"signature\":\"ZszO6sbalmMKzhqNtJoGiUQyZ2llCtC2rSimXTOWSTE\"}": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbGljZSIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzk0MTk3MDQ3fQ.ZszO6sbalmMKzhqNtJoGiUQyZ2llCtC2rSimXTOWSTE",
+    "legit": true,
+    "unsafe": {
+      "accepted": true,
+      "claims": {
+        "sub": "alice",
+        "role": "user",
+        "exp": 1794197047
+      },
+      "exploited": false
+    },
+    "safe": {
+      "accepted": true,
+      "claims": {
+        "sub": "alice",
+        "role": "user",
+        "exp": 1794197047
+      },
+      "exploited": false
+    }
+  },
+  "jwt\n{\"header\":\"{\\\"alg\\\":\\\"none\\\",\\\"typ\\\":\\\"JWT\\\"}\",\"payload\":\"{\\\"sub\\\":\\\"attacker\\\",\\\"role\\\":\\\"admin\\\",\\\"exp\\\":9999999999}\",\"signature\":\"\"}": {
+    "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJhdHRhY2tlciIsInJvbGUiOiJhZG1pbiIsImV4cCI6OTk5OTk5OTk5OX0.",
+    "legit": false,
+    "unsafe": {
+      "accepted": true,
+      "claims": {
+        "sub": "attacker",
+        "role": "admin",
+        "exp": 9999999999
+      },
+      "exploited": true
+    },
+    "safe": {
+      "accepted": false,
+      "error": "unexpected algorithm",
+      "exploited": false
+    }
+  },
+  "jwt-sample\n{\"kind\":\"expired\"}": {
+    "header": "{\"alg\":\"HS256\",\"typ\":\"JWT\"}",
+    "payload": "{\"sub\":\"alice\",\"role\":\"user\",\"exp\":1794196086}",
+    "signature": "JtwG36YJWIq7SFr2Mvg36XNie-3GcgOUAO54Q3JzJRs"
+  },
+  "jwt-sample\n{\"kind\":\"tampered\"}": {
+    "header": "{\"alg\":\"HS256\",\"typ\":\"JWT\"}",
+    "payload": "{\"sub\":\"alice\",\"role\":\"admin\",\"exp\":1794197046}",
+    "signature": "BEKojWuiyzsWX5EYpEkQM94sc6Pw2s-_w3Q63wmoyZQ"
+  },
+  "jwt-sample\n{\"kind\":\"valid\"}": {
+    "header": "{\"alg\":\"HS256\",\"typ\":\"JWT\"}",
+    "payload": "{\"sub\":\"alice\",\"role\":\"user\",\"exp\":1794197047}",
+    "signature": "ZszO6sbalmMKzhqNtJoGiUQyZ2llCtC2rSimXTOWSTE"
+  },
+  "passwords\n{\"password\":\"correct horse battery staple\"}": {
+    "unsafe": {
+      "hashes": [
+        "c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a",
+        "c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a"
+      ],
+      "identical": true,
+      "cracked": null,
+      "lookupMs": 0.001,
+      "tableSize": 187,
+      "exploited": false
+    },
+    "safe": {
+      "hashes": [
+        "scrypt$32768$8$1$oq2ii+rHMX8g/39LjqPv/w==$IbSZGCkNKkvmc4IIxx3sfifsVx/7mwZJHeO5m7/CV/QTdzNw7htrT4q0TVwANu//cFj/fesX+inU8AgDdviX2g==",
+        "scrypt$32768$8$1$jaGEW4oM1IqxoGuyJlw9iQ==$hbKa2+WcHaZlMJlS/FmSDcL1BVri5O5FFbekQXEcPH1YIb1aMKfjJvBZYT/HlqbrGEUi8j04/TuTzLLZ8UbkSw=="
+      ],
+      "identical": false,
+      "hashMs": [
+        50,
+        45
+      ],
+      "lookupMs": 0.002,
+      "cracked": false,
+      "verified": true,
+      "exploited": false
+    }
+  },
+  "passwords\n{\"password\":\"hunter2\"}": {
+    "unsafe": {
+      "hashes": [
+        "f52fbd32b2b3b86ff88ef6c490628285f482af15ddcb29541f94bcf526a3f6c7",
+        "f52fbd32b2b3b86ff88ef6c490628285f482af15ddcb29541f94bcf526a3f6c7"
+      ],
+      "identical": true,
+      "cracked": "hunter2",
+      "lookupMs": 0.002,
+      "tableSize": 187,
+      "exploited": true
+    },
+    "safe": {
+      "hashes": [
+        "scrypt$32768$8$1$b0R6blouyWLnmpilhvUjUw==$MxpKZuk9afYEuwusTe0DUdkeyXrFsM3LXAieqi9VNRVEtTtsqmQGBb+EMm9MznI8/Nb1bpJBMMl1NmZCGo5fRA==",
+        "scrypt$32768$8$1$mRMgwYV69vzs6pH7jCGqmg==$e52cpEK68EUH9MvO0ho2Zc0EKvKeft9GTXb+ujTAxzzrXlVQm476iMm0ibD4FIjhheLOJ5zphshmsbpVb84OeA=="
+      ],
+      "identical": false,
+      "hashMs": [
+        54,
+        60
+      ],
+      "lookupMs": 0.011,
+      "cracked": false,
+      "verified": true,
+      "exploited": false
+    }
+  },
+  "passwords\n{\"password\":\"letmein\"}": {
+    "unsafe": {
+      "hashes": [
+        "1c8bfe8f801d79745c4631d09fff36c82aa37fc4cce4fc946683d7b336b63032",
+        "1c8bfe8f801d79745c4631d09fff36c82aa37fc4cce4fc946683d7b336b63032"
+      ],
+      "identical": true,
+      "cracked": "letmein",
+      "lookupMs": 0.001,
+      "tableSize": 187,
+      "exploited": true
+    },
+    "safe": {
+      "hashes": [
+        "scrypt$32768$8$1$/41Dt1EZXFsg1cwqT940fg==$k8Y5cJbg1ShVWqjy0m6qoGo8axEAr/6kMAz0pP3/aWdiH/ob8YsLuCyrph5PO1smi76uNUI2nwjt0GkPChmGNg==",
+        "scrypt$32768$8$1$TyEmJVjChmPhaRbjFiTfUQ==$LW1HY8oWULCTOAD1YEb76mqUL2OcsH97mLpUxBMbbpqhnLMF8Mg6N9KiPZgSOFes39iSwVnnJqU2ha67tbuvBA=="
+      ],
+      "identical": false,
+      "hashMs": [
+        56,
+        45
+      ],
+      "lookupMs": 0.004,
+      "cracked": false,
+      "verified": true,
+      "exploited": false
+    }
+  },
+  "passwords\n{\"password\":\"password123\"}": {
+    "unsafe": {
+      "hashes": [
+        "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+        "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f"
+      ],
+      "identical": true,
+      "cracked": "password123",
+      "lookupMs": 0.006,
+      "tableSize": 187,
+      "exploited": true
+    },
+    "safe": {
+      "hashes": [
+        "scrypt$32768$8$1$gX00w8VsE5N5ppAyTZoo5g==$cg8CNnumfnLFGvRPbyNQXYnfAiKAL/R3B0RUUhnR1bomjuagS7ul3Vp9EiunkN8aqbskjJErl5M/tiB/8Cl+9w==",
+        "scrypt$32768$8$1$oG7IIXe9VDzoU3sH/6ZBIQ==$HqDhXM4Wc4wK/UjIdtdE2gDvNELKs/9Ah7iToMdsWj+9e4CYV0rcgZCIUVBAF2TqJw1afIOZpTqXv0gZi9kN6w=="
+      ],
+      "identical": false,
+      "hashMs": [
+        63,
+        52
+      ],
+      "lookupMs": 0.002,
+      "cracked": false,
+      "verified": true,
+      "exploited": false
+    }
+  },
+  "secrets\n{\"value\":\"\"}": {
+    "unsafe": {
+      "started": true,
+      "usedSecret": "changeme",
+      "weak": true,
+      "log": "config {\"port\":3000,\"jwtSecret\":\"changeme\",\"dbPassword\":\"s3cr3t\"}",
+      "exploited": true
+    },
+    "safe": {
+      "started": false,
+      "error": "Missing required secret: JWT_SECRET",
+      "log": "config {\"port\":3000,\"jwtSecret\":\"[REDACTED]\",\"dbPassword\":\"[REDACTED]\"}",
+      "exploited": false
+    }
+  },
+  "secrets\n{\"value\":\"ORz3b28vvxbW+SyvHmO6m7fRBnYrNiDfxTF60UfWPGo=\"}": {
+    "unsafe": {
+      "started": true,
+      "usedSecret": "ORz3b28vvxbW+SyvHmO6m7fRBnYrNiDfxTF60UfWPGo=",
+      "weak": false,
+      "log": "config {\"port\":3000,\"jwtSecret\":\"ORz3b28vvxbW+SyvHmO6m7fRBnYrNiDfxTF60UfWPGo=\",\"dbPassword\":\"s3cr3t\"}",
+      "exploited": true
+    },
+    "safe": {
+      "started": true,
+      "bytes": 32,
+      "log": "config {\"port\":3000,\"jwtSecret\":\"[REDACTED]\",\"dbPassword\":\"[REDACTED]\"}",
+      "exploited": false
+    }
+  },
+  "secrets\n{\"value\":\"changeme\"}": {
+    "unsafe": {
+      "started": true,
+      "usedSecret": "changeme",
+      "weak": true,
+      "log": "config {\"port\":3000,\"jwtSecret\":\"changeme\",\"dbPassword\":\"s3cr3t\"}",
+      "exploited": true
+    },
+    "safe": {
+      "started": false,
+      "error": "JWT_SECRET must be at least 32 random bytes, base64 encoded. Generate one with:\n  node -e \"console.log(crypto.randomBytes(32).toString('base64'))\"",
+      "log": "config {\"port\":3000,\"jwtSecret\":\"[REDACTED]\",\"dbPassword\":\"[REDACTED]\"}",
+      "exploited": false
+    }
+  },
+  "secrets\n{\"value\":\"hunter2\"}": {
+    "unsafe": {
+      "started": true,
+      "usedSecret": "hunter2",
+      "weak": true,
+      "log": "config {\"port\":3000,\"jwtSecret\":\"hunter2\",\"dbPassword\":\"s3cr3t\"}",
+      "exploited": true
+    },
+    "safe": {
+      "started": false,
+      "error": "JWT_SECRET must be at least 32 random bytes, base64 encoded. Generate one with:\n  node -e \"console.log(crypto.randomBytes(32).toString('base64'))\"",
+      "log": "config {\"port\":3000,\"jwtSecret\":\"[REDACTED]\",\"dbPassword\":\"[REDACTED]\"}",
+      "exploited": false
+    }
+  },
+  "tokens\n{}": {
+    "unsafe": {
+      "tokens": [
+        "5sl79nzsre",
+        "3hqwy860eei",
+        "t1s2ug8rku",
+        "12ixh7syrd",
+        "l8yd89cl65n"
+      ],
+      "exploited": true
+    },
+    "safe": {
+      "tokens": [
+        "M1SZ5g3E29QjSYIbiwOiGiOfGVDXxs9PINkZjDovkew",
+        "enPlWc3_6rHRlekH1L2u6QyRDoW9w2m5k03zugif7Tc",
+        "7H4XJoTGFkxssx9GSnjLNXNisAEAwO-zw6argGnCBRE",
+        "qBcoDj6oGUwX6VI5uRpkvaxJcD-AYRcS_YGkAwqbeZY",
+        "TRzhQTrg9xCvOWAxaCBWwKxn0KSUGd9ukZHXFC1694Q"
+      ],
+      "stored": "e246a359dbf3452a6a794b231c8b0b6867782e25d862114895da8269529314fc",
+      "exploited": false
+    }
+  }
+}
